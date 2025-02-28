@@ -15,10 +15,9 @@ public:
 class MergeLinkedList{
     public:
         ListNode* mergetwolists(ListNode* list1, ListNode* list2){
-            // head acts as a pointer to the head of the merged list
-            head = new ListNode();
-            // tail is like the pointer that traverses the merged list
-            tail = head;
+            // dummt node is used as an anchor to the merge list
+            ListNode dummy;
+            ListNode* tail = &dummy;
 
             while(list1 && list2){
                 if(list1->val < list2->val){
@@ -35,21 +34,16 @@ class MergeLinkedList{
             if(list1) tail->next = list1;
             if(list2) tail->next = list2;
 
-            return head->next;
+            return dummy.next;
         }
-        ~MergeLinkedList(){
-            delete head;
-            delete tail;
-        }
+        
         void printlist(ListNode* head){
             while(head){
                 cout << head->val << " ";
                 head = head->next;
             }
         }
-    private:
-        ListNode* head;
-        ListNode* tail;
+ 
 };
 
 int main(){
@@ -58,5 +52,13 @@ int main(){
     ListNode* list2 = new ListNode(1, new ListNode(3, new ListNode(4)));
     ListNode* mergedList = ml.mergetwolists(list1, list2);
     ml.printlist(mergedList);
+    
+    ListNode* current = mergedList;
+    while(current) {
+        ListNode* temp = current;
+        current = current->next;
+        delete temp;
+    }
+    
     return 0;
 }
