@@ -16,23 +16,17 @@ class BrowserHistory {
         }
 
         void visit(string url) {
-            ListNode* current = tail->next;
-            while (current != nullptr){
-                ListNode* temp = current;
-                current = current->next;
-                delete temp;
-            }
-            tail->next = nullptr;
-
             ListNode* newNode = new ListNode(url, nullptr, tail);
             tail->next = newNode;
             newNode->prev = tail;
             tail = newNode;
 
             currentIndex++;
-            // why not size ++ ?  cuz in the clean up the forward history when we visit a new url
-            // this means the size is now not the total number of urls we have visited
-            // it is the number of urls we have visited since the current url + 1 (for the current url)
+            // why size = current index + 1 and not size ++? e.g start with [google] size = 1, currIdx=0
+            // [google] -> [youtube] size = 2 , currIdx=1
+            // [google] -> [youtube] -> [X] size =3, currIdx=2
+            // back track two steps so at google again and visit github
+            // [googl] -> [github] size = 4 currIdx = 1 HERE is the error it should be 2 but we get 4 !
             size = currentIndex + 1;
         }
 
@@ -40,37 +34,31 @@ class BrowserHistory {
             if (currentIndex - steps < 0){
                 steps = currentIndex;
             }
-            ListNode* temp = tail;
-            while (temp->prev != nullptr && steps > 0){
-                temp = temp->prev;
-                currentIndex--;
-                steps--;
+            if (tail->prev != nullptr){
+                for(int i=0; i<steps; i++){
+                        tail = tail->prev;
+                        currentIndex--;
+                }
             }
-            tail = temp;
-            return temp->url;
+            return tail->url;
         }
 
         string forward(int steps) {
             if (currentIndex + steps >= size){
-                steps = size - currentIndex - 1;
+                steps = size - currentIndex;
             }
-            ListNode* temp = tail;
-            while (temp->next != nullptr && steps > 0){
-                temp = temp->next;
-                currentIndex++;
-                steps--;
+            if (tail->next != nullptr){
+                for (int i = 0; i < steps; i++){
+                    tail = tail->next;
+                    currentIndex++;
+                    if (tail->next == nullptr) {  
+                        break;  
+                    }
+                }
             }
-            tail = temp;
-            return temp->url;
+            return tail->url;
         }
-        ~BrowserHistory(){
-            ListNode* current = head;
-            while ( current != nullptr){
-                ListNode* temp = current;
-                current = current->next;
-                delete temp;
-            }
-        }
+
     private:
         struct ListNode {
             string url;
