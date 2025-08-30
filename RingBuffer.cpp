@@ -7,7 +7,7 @@
 struct Image{
   std::string filename;
   int timestamp;
-
+  Image(): filename(""), timestamp(0){}
   Image(const std::string& name, int ts): filename(name), timestamp(ts) {}
 };
 
@@ -29,7 +29,7 @@ class RingBuffer {
             if (cap == 0){
                 throw std::invalid_argument("Buffer Capacity must bre greater than 0");
             }
-            buffer.reserve(cap);
+            buffer.resize(capacity);
         }
 
         void add(const T& element){
