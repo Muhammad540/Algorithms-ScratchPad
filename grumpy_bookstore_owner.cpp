@@ -9,6 +9,40 @@ number of consecutive ways to pick an item: n - k + 1
 
 using namespace std;
 
+/*
+ * O(n) sol
+ */
+class Solution {
+    public:
+        int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int minutes) {
+		int left_ptr = 0;
+		int window = 0;
+		int max_window = 0;
+		int satisfied = 0;
+
+		for (int right_ptr=0; right_ptr < customers.size(); right_ptr++){
+			if (grumpy[right_ptr]){
+				window += customers[right_ptr];
+			} else {
+				satisfied += customers[right_ptr];
+			}
+
+			if ((right_ptr - left_ptr + 1) > minutes) {
+				if (grumpy[left_ptr]){
+					window -= customers[left_ptr];
+				}
+				left_ptr+=1;
+			}
+			max_window = std::max(max_window, window);
+			
+		}
+		return satisfied + max_window;
+
+	}
+};
+
+/*
+ * O(n*m) sol
 class Solution {
     public:
         int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int minutes) {
@@ -39,6 +73,7 @@ class Solution {
             return max_satisfied_count;
         }
 };
+*/
 
 //  customers = [1,0,1,2,1,1,7,5], minutes = 3
 //  grumpy    = [0,1,0,1,0,1,0,1]
