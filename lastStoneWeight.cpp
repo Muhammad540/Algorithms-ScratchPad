@@ -8,7 +8,17 @@ using namespace std;
 class ManageHeap {  
 public:  
     vector<int> heap;  
-
+    /*
+        For a specific node 'i', its:
+        1. parent is at: (i-1)/2
+        2. left child is at: (2*i + 1)
+        3. right child is at: (2*i + 2)
+        Space: O(n)
+        insertion: O(logn)
+        deletion: O(logn)
+        peak: O(1)
+        heapify: O(n)
+    */
     void heapify(vector<int>& stones) {
         heap = stones;
         heap.insert(heap.begin(),0); // dummy value at index 0
